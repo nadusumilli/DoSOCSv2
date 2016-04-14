@@ -349,7 +349,17 @@ def main(sysargv=None):
             sys.stderr.write(fmt.format(package_path, doc_id))
         with engine.begin() as conn:
             print(render.render_document(conn, doc_id, template_file))
-    
+    elif argv['relation']:
+        kwargs = {
+            'parentFile': argv['PARENT-FILE'],
+            'childFile': argv['CHILD-FILE'],
+            'comment': 'DEPENDENCY_OF'
+        }
+        print('Entered to Scan the Results!',file=sys.stderr,**kwargs)
+        sys.stdout.flush()
+        with engine.begin() as conn:
+                printval = spdxdb.CreateIdentifiers(conn, **kwargs)
+
     return 0
 
 
