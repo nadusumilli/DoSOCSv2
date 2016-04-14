@@ -24,7 +24,7 @@ from sqlalchemy.sql import select, and_
 from . import queries
 from . import schema as db
 from . import util
-
+import sys
 
 def insert(conn, table, params):
     query = table.insert().values(**params)
@@ -268,24 +268,30 @@ def get_doc_by_package_id(conn, package_id):
     else:
         return dict(**result)
         
-def CreateIdentifier(conn, parentFile=None,childFile=None,comment=None)
+def CreateIdentifiers(conn, parent_name=None,child_name=None):
+    splitparent = parent_name.split(':')
+    parentName = splitparent[1]+'-'+splitparent[3]+'.jar'
+    splitchild = child_name.split(':')
+    childName = splitchild[1]+'-'+splitchild[3]+'.jar'
     try:
-        leftIdentifier = conn.execute(queries.getIdentifierByName(parentFile)).fetchone()
-        rightIdentifier = conn.execute(queries.getIdentifierByName(childFile))
-        if(leftIdentifier == None or rightIdentifier==None):
-            print 'either identifier for parent or child packages does not exist'
-            print parentFile, childFile
+        leftIdentifier = conn.execute(queries.getIdentifierByName(parentName)).fetchone()
+        rightIdentifier = conn.execute(queries.getIdentifierByName(childName)).fetchone()
     except ValueError as v:
         print 'failure to get identifier for the following Parent or Child'
-        print parentFile, childFile
-    kwargs = {
-        'left_identifier_id': leftIdentifier[0],
-        'relationship_type_id': 29,
-        'right_identifier_id': rightIdentifier[0],
-        'relationship_comment': ''
-    }
-    print 'kwargs'
-    try:
-	    insert(conn,db.relationships,kwargs)
-    except:
-        pass
+        print parent_name, child_name
+    if(leftIdentifier is None or rightIdentifier is None):
+    	sys.stderr.write('Identifiers Not Found for parent:\n'+parent_name+'or child:\n'+child_name+'\nRelationship not entered!\n\n')
+    	print '*'*40
+    else:
+    	kwargs = {
+    	    'left_identifier_id': leftIdentifier[0],
+            'relationship_type_id': 29,
+            'right_identifier_id': rightIdentifier[0],
+            'relationship_comment': ''
+    	}
+    	#print kwargs
+    	try:
+    	    insert(conn,db.relationships,kwargs)
+    	    print '*'*40+'\nRelationship Added to database!\n'
+    	except Exception as e:
+       	    print e

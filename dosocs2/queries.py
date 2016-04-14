@@ -497,7 +497,7 @@ def auto_described_by(docid):
     )
 
 def getIdentifierByName(package_Name):
-    ide1 = db.identifier.alias()
+    ide1 = db.identifiers.alias()
     pac = db.packages.alias()
     one =(
             select([
@@ -506,6 +506,6 @@ def getIdentifierByName(package_Name):
             .select_from(
                         ide1.join(pac, ide1.c.package_id == pac.c.package_id)
                         )
-            .where(pac.c.file_name == package_name)
+            .where(pac.c.file_name == package_Name)
     )
     return one

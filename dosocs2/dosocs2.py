@@ -31,6 +31,7 @@
 {0} scanproject [--project-file] (PROJECT-FILE)
 {0} scanners [-f FILE]
 {0} (--help | --version)
+{0} relation (PARENT) (CHILD)
 
 Commands:
   configtest    Check configuration
@@ -190,6 +191,8 @@ def main(sysargv=None):
     doc_id = argv['DOC-ID']
     package_id = argv['PACKAGE-ID']
     package_path = argv['PATH']
+    parent_file = argv['PARENT']
+    child_file = argv['CHILD']
     new_doc_comment = argv['--doc-comment'] or ''
     new_doc_name = argv['--doc-name'] or argv['--package-name']
     template_file = argv['--template-file'] or format_map['tag']
@@ -351,12 +354,9 @@ def main(sysargv=None):
             print(render.render_document(conn, doc_id, template_file))
     elif argv['relation']:
         kwargs = {
-            'parentFile': argv['PARENT-FILE'],
-            'childFile': argv['CHILD-FILE'],
-            'comment': 'DEPENDENCY_OF'
-        }
-        print('Entered to Scan the Results!',file=sys.stderr,**kwargs)
-        sys.stdout.flush()
+		'parent_name': parent_file,
+		'child_name': child_file
+	}
         with engine.begin() as conn:
             printval = spdxdb.CreateIdentifiers(conn, **kwargs)
 
