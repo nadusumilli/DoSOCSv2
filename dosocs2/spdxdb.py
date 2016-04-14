@@ -267,3 +267,25 @@ def get_doc_by_package_id(conn, package_id):
         return None
     else:
         return dict(**result)
+        
+def CreateIdentifier(conn, parentFile=None,childFile=None,comment=None)
+    try:
+        leftIdentifier = conn.execute(queries.getIdentifierByName(parentFile)).fetchone()
+        rightIdentifier = conn.execute(queries.getIdentifierByName(childFile))
+        if(leftIdentifier == None or rightIdentifier==None):
+            print 'either identifier for parent or child packages does not exist'
+            print parentFile, childFile
+    except ValueError as v:
+        print 'failure to get identifier for the following Parent or Child'
+        print parentFile, childFile
+    kwargs = {
+        'left_identifier_id': leftIdentifier[0],
+        'relationship_type_id': 29,
+        'right_identifier_id': rightIdentifier[0],
+        'relationship_comment': ''
+    }
+    print 'kwargs'
+    try:
+	    insert(conn,db.relationships,kwargs)
+    except:
+        pass
