@@ -495,3 +495,17 @@ def auto_described_by(docid):
         )
     .where(v.c.document_id == docid)
     )
+
+def getIdentifierByName(package_Name):
+    ide1 = db.identifier.alias()
+    pac = db.packages.alias()
+    one =(
+            select([
+                    ide1.c.identifier_id    .label('left_identifier_id'),
+                    ])
+            .select_from(
+                        ide1.join(pac, ide1.c.package_id == pac.c.package_id)
+                        )
+            .where(pac.c.file_name == package_name)
+    )
+    return one
