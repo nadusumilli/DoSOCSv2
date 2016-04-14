@@ -358,7 +358,7 @@ def main(sysargv=None):
         print('Entered to Scan the Results!',file=sys.stderr,**kwargs)
         sys.stdout.flush()
         with engine.begin() as conn:
-                printval = spdxdb.CreateIdentifiers(conn, **kwargs)
+            printval = spdxdb.CreateIdentifiers(conn, **kwargs)
 
     return 0
 
