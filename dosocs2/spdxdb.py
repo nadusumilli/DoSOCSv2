@@ -295,3 +295,4 @@ def CreateIdentifiers(conn, parent_name=None,child_name=None):
     	    print '*'*40+'\nRelationship Added to database!\n'
     	except Exception as e:
        	    print e
+    	    pass
